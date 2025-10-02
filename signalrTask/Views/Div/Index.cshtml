@@ -1,0 +1,63 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag Box</title>
+    <style>
+        #myDiv {
+            width: 100px;
+            height: 100px;
+            background: lightcoral;
+            position: absolute;
+            cursor: grab;
+        }
+    </style>
+</head>
+<body>
+    <div id="myDiv"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script>
+        // define connection
+        var con = new signalR.HubConnectionBuilder().withUrl("/Move-Div").build();
+
+        const box = document.getElementById("myDiv");
+        let isDragging = false, offsetX = 0, offsetY = 0;
+
+        // start connection
+        con.start();
+
+        //call back function
+        con.on("MoveDiv", function (x, y) {
+            box.style.left = x + "px";
+            box.style.top = y + "px";
+        });
+
+        // events للماوس
+        document.addEventListener("mousedown", function (e) {
+            isDragging = true;
+            offsetX = e.clientX - box.offsetLeft;
+            offsetY = e.clientY - box.offsetTop;
+            box.style.cursor = "grabbing";
+        });
+
+        document.addEventListener("mousemove", function (e) {
+            if (!isDragging) return;
+
+            let newX = e.clientX - offsetX;
+            let newY = e.clientY - offsetY;
+
+            // invoke 
+            con.invoke("UpdatePosition", newX, newY);
+        });
+
+        document.addEventListener("mouseup", function () {
+            isDragging = false;
+            box.style.cursor = "grab";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿@model signalrTask.ViewModels.Account.LoginDTO
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div id="successMessage" class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+@if (ViewBag.UnauthorizedMessage != null)
+{
+    <div id="UnauthorizedMessage" class="alert alert-danger">
+        @ViewBag.UnauthorizedMessage
+    </div>
+}
+
+
+<h1>Login</h1>
+
+<form action="/Account/Login" method="post">
+   @*  <div asp-validation-summary ="All" class="text-danger" ></div> *@
+        <div class="form-group">
+            <label asp-for="email"></label>
+            <input asp-for="email" class="form-control"/>
+            <span asp-validation-for="email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+        <label asp-for="password"></label>
+        <input asp-for="password" class="form-control" />
+            <span asp-validation-for="password" class="text-danger"></span>
+        </div>
+    <br />
+    <br />
+    <div class="form-group">
+        <input type="submit" value="Login" class="btn btn-primary" />
+        <a href="/Account/Register">Don't Have Account?</a>
+    </div>
+        
+</form>
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<script>
+    // إخفاء الرسالة بعد 5 ثوانٍ
+    setTimeout(function () {
+        var message = document.getElementById("successMessage");
+        if (message) {
+            message.style.display = "none";
+        }
+    }, 1000); // 5000ms = 5 ثوانٍ
+</script>
+<script>
+    // إخفاء الرسالة بعد 5 ثوانٍ
+    setTimeout(function () {
+        var message = document.getElementById("UnauthorizedMessage");
+        if (message) {
+            message.style.display = "none";
+        }
+    }, 1000); // 5000ms = 5 ثوانٍ
+</script>
+

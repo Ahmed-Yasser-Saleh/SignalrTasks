@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Employee
+<h1>Chat</h1>
+<input type="text" id="groupname" />
+<button onclick="join()">Join group</button>
+<input type="text" id="message" />
+<button onclick="send()">send message</button>
+<ul id="Mgs">
+
+</ul>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script>
+    //define connection
+   var con = new signalR.HubConnectionBuilder().withUrl("/Chat").build();
+
+    //start connection
+    con.start();
+
+    //invoke 
+    function join() {
+        con.invoke("joingroup", $("#groupname").val(), "@Model.UserName")
+    }
+    function send() {
+        con.invoke("sendmessage", $("#message").val(), "@Model.UserName")
+    }
+    //call back function
+    con.on("JoinGroup", function(groupname, username){
+        $("#Mgs").append("<li>" + username + " joind group " + groupname + "</li>");
+    })
+    con.on("recievemessage", function (message, username) {
+        $("#Mgs").append("<li>" + username + ": " + message + "</li>");
+    })
+</script>
+
+

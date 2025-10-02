@@ -1,0 +1,45 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model IEnumerable<EmplyeeViewmodel>
+<h2>Employee</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+        <tr>
+            <td>@emp.name</td>
+                <td>@emp.address</td>
+                <td>@emp.age</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Add" asp-controller="Employee" class="btn btn-primary">Add</a>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script>
+    //define connection
+    var con = new signalR.HubConnectionBuilder().withUrl("/Add-Employee").build();
+
+    //start connection
+    con.start();
+
+    //define call back fun
+    con.on("New Employee Added", function (employee, connectionid) {
+        let row = `<tr>
+                                    <td> ${employee.name} </td>
+                                    <td> ${employee.address} </td>
+                                    <td> ${employee.age} </td>
+                   </tr>`;
+        document.querySelector("tbody").innerHTML += row;
+    })
+</script>
