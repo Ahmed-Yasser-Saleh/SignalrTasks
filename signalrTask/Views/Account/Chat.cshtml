@@ -30,8 +30,18 @@
         $("#Mgs").append("<li>" + username + " joind group " + groupname + "</li>");
     })
     con.on("recievemessage", function (message, username) {
+        $("#Mgs li:last").remove();
         $("#Mgs").append("<li>" + username + ": " + message + "</li>");
     })
+ 
+    con.on("useristyping", function (username) {
+        $("#Mgs").append("<li>" + username + " is typing....</li>");
+    });
+
+    //js event
+    document.getElementById("message").addEventListener("focus", function () {
+        con.invoke("usertyping", "@Model.UserName");
+    });
 </script>
 
 
